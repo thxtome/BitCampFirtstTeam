@@ -1,4 +1,4 @@
-package member;
+package member.util;
 
 import java.util.Arrays;
 
@@ -25,22 +25,22 @@ public class ObjectArrayList {
 	}
 
 	// 배열에 값을 더함
-	void add(Object Object) {
+	public void add(Object Object) {
 		add(pos, Object);
 	}
 
 	// 배열의 인덱스 값으로 출력
-	Object get(int index) {
+	public Object get(int index) {
 		return elements[index];
 	}
 	
 	// 갯수 측정	int size() {
-	int size() {
+	public int size() {
 		return pos;
 	}
 
 	// 삭제
-	void remove(int no) {
+	public void remove(int no) {
 		int num = pos - no - 1;
 		if (num > 0) {
 			System.arraycopy(elements, no + 1, elements, no, num);
@@ -51,20 +51,20 @@ public class ObjectArrayList {
 	}
 
 	// 전체 삭제 사용안함
-	void clear() {
+	public void clear() {
 		Object[] arr = new Object[elements.length];
 		elements = arr;
 		pos = 0;
 	}
 
 	// 비었는지 측정 사용안함
-	boolean isEmpty() {
+	public boolean isEmpty() {
 		return pos == 0;
 
 	}
 
 	// 위치더하기 여긴 아직 안 함
-	void add(int index, Object object) {
+	public void add(int index, Object object) {
 		if (pos == elements.length) {
 			elements = Arrays.copyOf(elements, elements.length * 2);
 		}

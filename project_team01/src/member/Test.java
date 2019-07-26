@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import ch07_class.exam.Student;
+import member.vo.Member;
 
 public class Test {
 	public static void main(String[] args) {
