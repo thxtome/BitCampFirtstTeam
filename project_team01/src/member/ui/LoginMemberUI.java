@@ -5,7 +5,7 @@ import member.dao.MemberDAO;
 public class LoginMemberUI extends BaseMemberUI{
 	MemberDAO dao;;
 	
-	LoginMemberUI(MemberDAO dao){
+	public LoginMemberUI(MemberDAO dao){
 		this.dao = dao;
 	}
 	

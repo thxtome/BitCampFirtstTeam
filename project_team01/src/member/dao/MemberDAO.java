@@ -1,14 +1,15 @@
 package member.dao;
 
 import member.util.ObjectArrayList;
-import member.vo.Member;
+import member.vo.MemberVO;
+import total.Login;
 
 public class MemberDAO {
 	ObjectArrayList list = new ObjectArrayList();
 	boolean loginCheck = false;
     
 	//회원가입
-	public int signUpBoard(Member m) {
+	public int signUpBoard(MemberVO m) {
 		if (duplicateCheck(m.getId(), 1)) return -2;
 		if(emptyCheck(m)) return -1;
 		list.add(m);
@@ -19,10 +20,11 @@ public class MemberDAO {
 	//로그인
 	public int loginMember(String id, String pw) {
 		for (int i = 0; i < list.size(); i++) {
-			Member m = (Member) list.get(i);
+			MemberVO m = (MemberVO) list.get(i);
 			if (id.equals(m.getId())) {
 				if (pw.equals(m.getPass())) {
 					setLoginCheck(true);
+					Login.setLoginInfo(m.getId());
 					return 1;
 				}
 			}
@@ -42,7 +44,7 @@ public class MemberDAO {
 	
 	
 	//회원가입시 빈칸체크
-	public boolean emptyCheck(Member m) {
+	public boolean emptyCheck(MemberVO m) {
 		if(m.getId().equals("")  || m.getPass().equals("")) {
 			return true;
 		}
@@ -52,7 +54,7 @@ public class MemberDAO {
 	//회원가입시 아이디 중복체크
 	public boolean duplicateCheck(String content, int type) {
 		for (int i = 0; i < list.size(); i++) {
-			Member m = (Member) list.get(i);
+			MemberVO m = (MemberVO) list.get(i);
 			switch (type) {
 			case 1:
 				if (content.equals(m.getId()))
@@ -63,4 +65,6 @@ public class MemberDAO {
 		return false;
 
 	}
+	
+	
 }

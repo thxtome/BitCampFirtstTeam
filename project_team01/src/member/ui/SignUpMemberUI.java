@@ -1,18 +1,18 @@
 package member.ui;
 
 import member.dao.MemberDAO;
-import member.vo.Member;
+import member.vo.MemberVO;
 
 public class SignUpMemberUI extends BaseMemberUI{
 	
 	MemberDAO dao;
-	SignUpMemberUI(MemberDAO dao){
+	public SignUpMemberUI(MemberDAO dao){
 		this.dao = dao;
 		
 	}
 	
 	public void service() {
-		Member m = new Member();
+		MemberVO m = new MemberVO();
 		m.setId(getString("아이디를 입력해주세요 : "));
 		m.setPass(getString("비밀번호를 입력해주세요 : "));
 		m.setName(getString("이름을 입력해주세요 : "));

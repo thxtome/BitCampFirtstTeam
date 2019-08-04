@@ -1,25 +1,18 @@
-package member.ui;
+package pointShop.ui;
 
 import java.util.Scanner;
 
-public abstract class BaseMemberUI {
+public abstract class BaseUI {
 	Scanner sc = new Scanner(System.in);
-	
-	public abstract void service();
-	
+
+	protected abstract void service();
+
 	protected String getString(String msg) {
 		System.out.print(msg);
 		return sc.nextLine();
-		
 	}
-	
-	protected int getInt(String msg) {
-		System.out.print(msg);
-		return Integer.parseInt(sc.nextLine());
-		
-	}
-	
-	
-	
 
+	protected int getInt(String msg) {
+		return Integer.parseInt(getString(msg));
+	}
 }
