@@ -2,6 +2,9 @@ package member;
 
 import java.util.Scanner;
 
+import member.dao.MemberDAO;
+import member.vo.Member;
+
 public class MemberUI {
 	Scanner sc = new Scanner(System.in);
 	MemberDAO dao = new MemberDAO();
