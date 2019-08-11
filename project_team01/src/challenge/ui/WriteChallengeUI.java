@@ -17,12 +17,18 @@ public class WriteChallengeUI extends BaseUI {
 	
 	public void service() {
 		Challenge c = new Challenge();
+//		if(c.getUser_name().equals("")) {
+//			System.out.println("로그인해 주시기 바랍니다.");
+//			return;
+//		}
 		//회원정보에서 작성자 가져오기
 //		c.setWriter()
 		c.setTitle(getString("챌린지 제목을 입력하세요 : "));
 		c.setContent(getString("챌린지 내용을 입력하세요 : "));
-		c.setPartNo(getInt("참가 제한 인원을 입력하세요 : "));
-		c.setPoint(getInt("참가 금액을 입력하세요 : "));
+		c.setExamDate(getString("시험날짜를 입력하세요 : "));
+		c.setLimitNo(getInt("함께 도전할 인원을 입력하세요 : "));
+		c.setPartFee(getInt("도전 금액을 입력하세요 : "));
+		c.setLimitDate(getString("모집기한을 입력하세요 : "));
 		String date = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
 		c.setRegDate(date);
 
