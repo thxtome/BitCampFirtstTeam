@@ -28,7 +28,7 @@ public class ListChallengeUI extends BaseUI {
 		}
 		for (int i = cList.size() - 1; i >= 0; i--) {
 			Challenge c = cList.get(i);
-			System.out.printf("%3d%10s%20s%8s%7d%7d\n", c.getChNo(), c.getUser_name(), c.getTitle(), c.getRegDate(),  c.getLimitNo(), c.getPartFee());
+			System.out.printf("%3d%10s%20s%8s%7d%7d\n", c.getChNo(), c.getUserName(), c.getTitle(), c.getRegDate(),  c.getLimitNo(), c.getPartFee());
 		}
 		System.out.println("---------------------------------");
 		BaseUI ui = null;
