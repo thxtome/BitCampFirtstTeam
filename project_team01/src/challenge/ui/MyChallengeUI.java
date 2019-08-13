@@ -11,7 +11,7 @@ public class MyChallengeUI extends BaseUI {
 		BaseUI ui = null;
 		while (true) {
 			switch (menu()) {
-//			case 1: ui = new 
+//			case 1: ui = new MyChallengeSelect();
 			}
 		}
 	}

@@ -1,14 +1,19 @@
 package challenge.ui;
 
+import java.util.Date;
 import java.util.Scanner;
 
 import challenge.dao.ChallengeDAO;
 
-public class ChallengeUI {
-	ChallengeDAO dao = new ChallengeDAO();
+public class ChallengeUI extends BaseUI{
+	ChallengeDAO dao;
 	Scanner sc = new Scanner(System.in);
 	
-	
+	public ChallengeUI() {}
+	public ChallengeUI(ChallengeDAO dao) {
+		this.dao = dao;
+	}
+
 	public void service() {
 		BaseUI ui = null;
 		while (true) {

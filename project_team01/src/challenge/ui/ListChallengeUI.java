@@ -7,50 +7,52 @@ import challenge.vo.Challenge;
 
 public class ListChallengeUI extends BaseUI {
 	ChallengeDAO dao;
+
 	public ListChallengeUI(ChallengeDAO dao) {
 		this.dao = dao;
 	}
-	//챌린지 조회
+
+	// 챌린지 조회
 	public void service() {
+		List<Challenge> cList = dao.selectChallenge();
+		//게시글의 모집기한과 현재날짜를 비교해서 진행상태 변화
 		
-		List<Challenge> list = dao.selectChallenge();
-		
-		System.out.println("전체 챌린지" + list.size() + "개");
+		System.out.println("전체 챌린지" + cList.size() + "개");
 		System.out.println("---------------------------------");
 		System.out.println("번호\t글쓴이\t제목\t작성일\t참가인원\t참가금액");
 		System.out.println("---------------------------------");
-		if (list.isEmpty()) {
-			System.out.println("게시물이 없습니다.");
+		if (cList.isEmpty()) {
+			System.out.println("게시물이 존재하지 않습니다.");
 			System.out.println("---------------------------------");
 			return;
 		}
-		for (int i = list.size() - 1; i >= 0; i--) {
-			Challenge c = list.get(i);
-			System.out.printf("%3d%10s%20s%8s%7d%7d\n", c.getNo(), c.getWriter(), c.getTitle(), c.getRegDate(),  c.getPartNo(), c.getPoint());
+		for (int i = cList.size() - 1; i >= 0; i--) {
+			Challenge c = cList.get(i);
+			System.out.printf("%3d%10s%20s%8s%7d%7d\n", c.getChNo(), c.getUser_name(), c.getTitle(), c.getRegDate(),  c.getLimitNo(), c.getPartFee());
 		}
 		System.out.println("---------------------------------");
-		int no = getInt("조회할 게시물 글번호를 입력하세요 : ");
-		Challenge c = dao.selectOneChallenge(no);
-		System.out.println("---------------------------------");
-		System.out.println("글번호 : " + c.getNo());
-		System.out.println("글쓴이 : " + c.getWriter());
-		System.out.println("제목 : " + c.getTitle());
-		System.out.println("내용 : " + c.getContent());
-		System.out.println("참가인원 : " + c.getPartNo());
-		System.out.println("참가금액 : " + c.getPoint());
-		System.out.println("작성일 : " + c.getRegDate());
-		System.out.println("---------------------------------");
-		String yn = getString("참여하시겠습니까? (Y: 참가, N: 불참) : ");
-		int result = dao.participation(yn,no/*로그인한 아이디*/);
-		if (result == 1) {
-			System.out.println("참가에 성공하셨습니다.");
+		BaseUI ui = null;
+		while (true) {
+			switch (menu()) {
+			case 1: ui = new DetailChallengeUI();
+//			case 2: ui = new KeywordSearch();
+//			case 3: ui = new PageChoiceUI();
+			case 0: ui = new ChallengeUI();
+			default : System.out.println("잘못된 번호입니다. 다시 입력해주세요.");
+			}
+			if (ui != null) {
+				ui.service();
+			}
 		}
-		
-		
-		/* 챌린지 글번호를 입력하면 상세조회로 가는것 구현
-		 * 0을 입력하면 이전화면 혹은 메인메뉴 구현
-		 */
-		
 	}
-	
+	int menu() {
+		System.out.println("---------------------------------");
+		System.out.println("1. 글번호 상세조회");
+		System.out.println("2. 키워드 검색");
+		System.out.println("3. 페이지 선택");
+		System.out.println("0. 이전");
+		System.out.println("---------------------------------");
+		return getInt("번호를 입력하세요 : ");
+	}
+
 }
