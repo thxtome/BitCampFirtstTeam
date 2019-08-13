@@ -1,11 +1,10 @@
-package total;
+package member.ui;
 
 import java.util.Scanner;
 
 import member.dao.MemberDAO;
-import member.ui.BaseMemberUI;
 
-public class TotalMenuUI extends BaseMemberUI {
+public class MenuMemberUI extends BaseMemberUI {
 	private Scanner sc = new Scanner(System.in);
 	private MemberDAO dao;
 	private String menuBefore = "-----------------------------\n" + "1. 로그인\n" + 
@@ -24,7 +23,7 @@ public class TotalMenuUI extends BaseMemberUI {
 																	+ "-----------------------------\n" +
 																	"메뉴를 선택해주세요 : ";
 
-	public TotalMenuUI(MemberDAO dao) {
+	public MenuMemberUI(MemberDAO dao) {
 		this.dao = dao;
 	}
 
@@ -35,10 +34,10 @@ public class TotalMenuUI extends BaseMemberUI {
 	public int menu() {
 
 		if (dao.isLoginCheck()) {
-			System.out.print(menuAfter);
+			System.out.println(menuAfter);
 			return Integer.parseInt(sc.nextLine());
 		}
-		System.out.print(menuBefore);
+		System.out.println(menuBefore);
 		return Integer.parseInt(sc.nextLine());
 	}
 

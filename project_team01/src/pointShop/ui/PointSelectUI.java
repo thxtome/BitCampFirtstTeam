@@ -23,7 +23,7 @@ public class PointSelectUI extends BaseUI{
 		System.out.println("--------------------");
 		for(int i = 0; i < list.size(); i++) {
 			PointVO p = list.get(i);
-			System.out.printf("%s\t일자 : %s\t   금액 : %,3d원   %s%n",p.getDeWi(),p.getRegDate(),p.getAmount(),p.getPayType());
+			System.out.printf("일자 : %s\t   금액 : %,3d원   %s%n",p.getRegDate(),p.getAmount(),p.getPayType());
 		}
 		if(list.size() == 0) {
 			System.out.println("내역이 없습니다.");

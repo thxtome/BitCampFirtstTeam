@@ -7,15 +7,6 @@ public class MemberVO {
 	private String phoneNumber = "";
 	private String eMail = "";
 	private String addr = "";
-	private long amount;
-
-	public long getAmount() {
-		return amount;
-	}
-
-	public void setAmount(long amount) {
-		this.amount = amount;
-	}
 
 	public String geteMail() {
 		return eMail;
