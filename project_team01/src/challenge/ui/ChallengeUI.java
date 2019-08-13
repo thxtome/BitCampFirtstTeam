@@ -5,7 +5,12 @@ import java.util.Scanner;
 import challenge.dao.ChallengeDAO;
 
 public class ChallengeUI {
-	ChallengeDAO dao = new ChallengeDAO();
+	ChallengeDAO dao;
+	
+	public ChallengeUI(ChallengeDAO dao) {
+		this.dao = dao;
+	}
+
 	Scanner sc = new Scanner(System.in);
 	
 	
