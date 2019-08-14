@@ -4,38 +4,46 @@ import java.util.Date;
 
 public class Challenge {
 	//챌린지 게시글 작성자
-	private String userName;
+	private String userId;
 	//챌린지 게시글 제목
 	private String title;
 	//챌린지 게시글 내용
 	private String content;
 	//챌린지 게시글 작성일
-	private Date regDate;
+	private String regDate;
 	//챌린지 참가금액
 	private int partFee;
 	//챌린지 제한 참여인원
-	private int limitNo;
+	private int limitPart;
 	//챌린지 글번호
-	private int chNo;
+	private int chalNo;
 	//진행상황 : 모집중(1), 진행중(2), 완료(3), 인증기간(4)
 	private int condition;
 	//챌린지 참여인원 모집기간
-	private Date limitDate;
+	private String recruitDate;
 	//시험날짜(챌린지 종료)
-	private Date examDate;
+	private String examDate;
 	//챌린지 포상 날짜
-	private Date rewardDate;
+	private String rewardDate;
+	//해당 챌린지 참가인원수
+	private int partCnt;
 
-	public int getLimitNo() {
-		return limitNo;
+	public int getPartCnt() {
+		return partCnt;
 	}
-	public void setLimitNo(int limitNo) {
-		this.limitNo = limitNo;
+	public void setPartCnt(int partCnt) {
+		this.partCnt = partCnt;
 	}
-	public Date getRewardDate() {
+	public int getLimitPart() {
+		return limitPart;
+	}
+	public void setLimitPart(int limitPart) {
+		this.limitPart = limitPart;
+	}
+	public String getRewardDate() {
 		return rewardDate;
 	}
-	public void setRewardDate(Date rewardDate) {
+	public void setRewardDate(String rewardDate) {
 		this.rewardDate = rewardDate;
 	}
 	public int getPartFee() {
@@ -51,24 +59,24 @@ public class Challenge {
 	public void setCondition(int condition) {
 		this.condition = condition;
 	}
-	public Date getLimitDate() {
-		return limitDate;
+	public String getRecruitDate() {
+		return recruitDate;
 	}
-	public void setLimitDate(Date date) {
-		this.limitDate = date;
+	public void setRecruitDate(String date) {
+		this.recruitDate = date;
 	}
-	public Date getExamDate() {
+	public String getExamDate() {
 		return examDate;
 	}
-	public void setExamDate(Date examDate) {
+	public void setExamDate(String examDate) {
 		this.examDate = examDate;
 	}
 	
-	public String getUserName() {
-		return userName;
+	public String getUserId() {
+		return userId;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	public String getTitle() {
 		return title;
@@ -82,17 +90,17 @@ public class Challenge {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Date getRegDate() {
+	public String getRegDate() {
 		return regDate;
 	}
-	public void setRegDate(Date regDate) {
+	public void setRegDate(String regDate) {
 		this.regDate = regDate;
 	}
 
-	public int getChNo() {
-		return chNo;
+	public int getChalNo() {
+		return chalNo;
 	}
-	public void setChNo(int chNo) {
-		this.chNo = chNo;
+	public void setChalNo(int chalNo) {
+		this.chalNo = chalNo;
 	}
 }

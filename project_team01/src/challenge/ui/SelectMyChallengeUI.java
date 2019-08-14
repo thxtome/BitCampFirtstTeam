@@ -4,20 +4,21 @@ import java.util.List;
 
 import challenge.dao.ChallengeDAO;
 import challenge.vo.Challenge;
+import total.Login;
 
-public class ListChallengeUI extends BaseUI {
+public class SelectMyChallengeUI extends BaseUI {
 	ChallengeDAO dao;
 
-	public ListChallengeUI(ChallengeDAO dao) {
+	public SelectMyChallengeUI(ChallengeDAO dao) {
 		this.dao = dao;
 	}
 
-	// 챌린지 조회
-	public void service() {
-		List<Challenge> cList = dao.selectChallenge();
+	// 사용자가 참가한 챌린지 조회
+	public void service(int condition) {
+		List<Challenge> cList = dao.selectMyChallenge(Login.getLoginId(), condition);
 		//게시글의 모집기한과 현재날짜를 비교해서 진행상태 변화
 		
-		System.out.println("전체 챌린지" + cList.size() + "개");
+		System.out.println("마이챌린지" + cList.size() + "개");
 		System.out.println("---------------------------------");
 		System.out.println("번호\t글쓴이\t제목\t작성일\t참가인원\t참가금액");
 		System.out.println("---------------------------------");
@@ -35,7 +36,7 @@ public class ListChallengeUI extends BaseUI {
 		while (true) {
 			switch (menu()) {
 			case 1: ui = new DetailChallengeUI();
-//			case 2: ui = new KeywordSearchUI();
+//			case 2: ui = new KeywordSearch();
 //			case 3: ui = new PageChoiceUI();
 			case 0: ui = new ChallengeUI();
 			default : System.out.println("잘못된 번호입니다. 다시 입력해주세요.");
@@ -55,4 +56,6 @@ public class ListChallengeUI extends BaseUI {
 		return getInt("번호를 입력하세요 : ");
 	}
 
+	public void service() {
+	}
 }

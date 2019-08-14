@@ -2,14 +2,17 @@ package challenge.vo;
 
 public class Certification {
 	//챌린지 글번호
-	private int chNo;
+	private int chalNo;
 	//인증자
 	private String user_id;
 	public int getChNo() {
-		return chNo;
+		return chalNo;
 	}
-	public void setChNo(int chNo) {
-		this.chNo = chNo;
+	public void setChalNo(int chalNo) {
+		this.chalNo = chalNo;
+	}
+	public int getChalNo() {
+		return chalNo;
 	}
 	public String getUser_id() {
 		return user_id;

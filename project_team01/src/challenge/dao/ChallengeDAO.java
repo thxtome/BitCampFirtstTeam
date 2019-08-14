@@ -1,207 +1,240 @@
 package challenge.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import challenge.util.ConnectionFactory;
+import challenge.util.ConnectionPool;
+import challenge.util.SqlExecutor;
 import challenge.vo.Challenge;
 import challenge.vo.Participant;
+import total.Login;
 
-public class ChallengeDAO extends Challenge {
+public class ChallengeDAO {
 	List<Participant> pList = new ArrayList<>();
 	List<Challenge> cList = new ArrayList<>();
 //	Challenge challenge = new Challenge();
 	Participant participant = new Participant();
-
+//	0000.00.00
+//	to_date(?,'yyyy.mm.dd')
 
 	// 챌린지 등록
 	public void insertChallenge(Challenge c) {
-		Connection con = null;
-		PreparedStatement prtmt = null;
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			con = DriverManager.getConnection(
-					"jdbc:oracle:thin:@localhost:1521:xe" , "hr", "hr"
-			);
-			StringBuffer sql = new StringBuffer();
-			sql.append("insert into tb_ challenge ( ");
-			sql.append("ch_no, user_name, title, content, part_fee, limit_no, limit_date, exam_date");
-			sql.append(") values ( ");
-			sql.append("seq_tb_challenge.next, ?, ?, ?, ?, ?, ?, ?");
-			sql.append(") ");
-			prtmt = con.prepareStatement(sql.toString());
-			int index = 1;
-			prtmt.setString(index++, c.getUserName());
-			prtmt.setString(index++, c.getTitle());
-			prtmt.setString(index++, c.getContent());
-			prtmt.setInt(index++, c.getPartFee());
-			prtmt.setInt(index++, c.getLimitNo());
-			prtmt.setDate(index++,  (Date)c.getLimitDate());
-			prtmt.setDate(index++, (Date)c.getExamDate());
-			
-			prtmt.executeUpdate();
-			cList.add(c);
-			
+			SqlExecutor.update(
+					"insert into tb_ challenge (chal_no, user_id, title, content, part_fee, limit_part, limit_date, exam_date, part_cnt) values (seq_tb_challenge.next, ?, ?, ?, ?, ?, to_date(?,'yyyy-mm-dd'), to_date(?,'yyyy-mm-dd'),"
+					+ "nvl((select count(*) from tb_participant)) + 1, 0)",
+					c.getUserId(), c.getTitle(), c.getContent(), c.getPartFee(), c.getLimitPart(), c.getRecruitDate(), c.getExamDate());
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {prtmt.close();} catch (Exception e) {}
-			try {con.close();} catch (Exception e) {}
 		}
-		
 	}
 
-	// 챌린지 전체조회 => 다시하기
+	// 챌린지 전체조회 
 	public List<Challenge> selectChallenge() {
 		Connection con = null;
 		PreparedStatement prtmt = null;
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			con = DriverManager.getConnection(
-				"jdbc:oracle:thin:@localhost:1521:mini201901"
-			);
+			con = ConnectionPool.getConnection();
 			StringBuffer sql = new StringBuffer();
-			sql.append("select ch_no, user_name, title, reg_date,  limit_no, part_fee ");
-			sql.append("  from tb_challenge");	
+			sql.append("select chal_no, user_id, title, to_char(reg_date, 'yyyy-mm-dd') as reg_date,  limit_part, part_fee ");
+			sql.append("  from tb_challenge");
 			prtmt = con.prepareStatement(sql.toString());
 
 			ResultSet rs = prtmt.executeQuery();
-			
+
 			while (rs.next()) {
 				Challenge c = new Challenge();
-				for (Challenge challenge : cList) {
-					// 연동 후 주석해제
-					/*
-					c.setChNo(rs.getInt(ch_no));
-					c.setUserName(rs.getString(user_name));
-					c.setTitle(rs.getString(title));
-					c.setRegDate(rs.getDate(reg_date));
-					c.setLimitNo(rs.getInt(limit_no));
-					c.setPartFee(rs.getInt(part_fee));
-					*/
-					cList.add(c);
-				}
+				
+				c.setChalNo(rs.getInt("chal_no")); 
+				c.setUserId(rs.getString("user_id"));
+				c.setTitle(rs.getString("title")); 
+				c.setRegDate(rs.getString("reg_date"));
+				c.setLimitPart(rs.getInt("limit_part")); 
+				c.setPartFee(rs.getInt("part_fee"));
+
+				cList.add(c);
 			}
 			return cList;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			try {prtmt.close();} catch (Exception e) {	}
-			try {con.close();} catch (Exception e) {	}
+			ConnectionFactory.close(prtmt);
+			ConnectionPool.releaseConnection(con);
 		}
 		return null;
 	}
 
-	// 챌린지 글번호 조회
+	// 1.챌린지 조회 -> 챌린지 글번호 조회
 	public Challenge selectOneChallenge(int no) {
 		Connection con = null;
 		PreparedStatement prtmt = null;
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			con = DriverManager.getConnection(
-			"jdbc:oracle:thin:@localhost:1521:xe", "hr", "hr"
-			);
+			con = ConnectionPool.getConnection();
+
 			StringBuffer sql = new StringBuffer();
-			sql.append("select ch_no, user_name, title, content, limit_no, part_fee, rdg_date, limit_date ");
-			sql.append("  from tb_challenge ");
+			sql.append(
+					"select chal_no, user_id, title, content, reg_date, part_fee, limit_part, recruit_date, exam_date, condition, reward_date ");
+			sql.append("  from tb_challenge");
 			sql.append(" where no = ?");
-			
-			prtmt.setInt(1, no);
 			prtmt = con.prepareStatement(sql.toString());
-			
+			prtmt.setInt(1, no);
 			ResultSet rs = prtmt.executeQuery();
-			
 			if (rs.next()) {
 				Challenge c = new Challenge();
-				//연동후 주석해제
-				/*
-				c.setChNo(rs.getInt(ch_no));
-				c.setUserName(rs.getString(user_name));
-				c.setTitle(rs.getString(title));
-				c.setContent(rs.getString(content));
-				c.setLimitchNo(rs.getInt(limit_no));
-				c.setPartFee(rs.getInt(part_fee));
-				c.setRegDate(rs.getDate(reg_date));
-				c.setLimitDate(rs.getDate(limit_date));
-				*/
+				c.setChalNo(rs.getInt("chal_no"));
+				c.setUserId(rs.getString("user_id"));
+				c.setTitle(rs.getString("title"));
+				c.setContent(rs.getString("content"));
+				c.setRegDate(rs.getString("reg_date"));
+				c.setPartFee(rs.getInt("part_fee"));
+				c.setLimitPart(rs.getInt("limit_part"));
+				c.setRecruitDate(rs.getString("recruit_date"));
+				c.setExamDate(rs.getString("exam_date"));
+				c.setCondition(rs.getInt("condition"));
+				c.setRewardDate(rs.getString("reward_date"));
 				cList.add(c);
-				return c; 
+				return c;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			try {prtmt.close();} catch (Exception e) {	}
-			try {con.close();} catch (Exception e) {	}
+			ConnectionFactory.close(prtmt);
+			ConnectionPool.releaseConnection(con);
 		}
 		return null;
 	}
 
-	// 챌린지 참가인원 가져오기
-	public int count(int no) {
-		for (int i = 0; i < pList.size(); i++) {
-			Participant p = pList.get(i);
-			if (p.getChNo() != no)
-				continue;
-			return p.getCnt();
-		}
-		return 0;
-	}
-
-	// 챌린지 진행상태 가져오기
-	public int condition(int no) {
-		for (int i = 0; i < pList.size(); i++) {
-			Challenge c = cList.get(i);
-			if (c.getChNo() != no)
-				continue;
-			return c.getCondition();
-		}
-		return 0;
-	}
-
 	// 참가할때 아이디 추가, 참가 날짜 추가, 진행상태변경
-	public void participation(int no/* 로그인 아이디 */) {
-		int limitNo = 0;
-		// 모집인원 가져오기
-		for (int i = 0; i < cList.size(); i++) {
-			Challenge c = cList.get(i);
-			if (c.getChNo() != no)
-				continue;
-			limitNo = c.getLimitNo();
-			break;
-		}
-		for (int i = 0; i < pList.size(); i++) {
-			Participant p = pList.get(i);
-			if (p.getChNo() != no)
-				continue;
-			// 로그인 아이디와 연동후 수정하기
-			// 로그인된 아이디를 참가자에 추가
-//			p.setUser_id(/* 로그인 아이디 */);
-			// 참가일 추가
-			// import 할때 util과 sql Date 동시에 하는방법
-//			p.setJoinDate(new Date());
-			// 코드 개선
-			// 모집인원이 모두 채워지면 진행상태 2로 변경
-			if (limitNo == p.getCnt()) {
-				for (int j = 0; j < cList.size(); j++) {
-					Challenge c = cList.get(j);
-					if (c.getChNo() != no)
-						continue;
-					c.setCondition(2);
-				}
+	public void participation(int no, String login) {
+		try {
+			Participant p = getParticipant(no);
+			if (p.getUserId().equals(login)) {
+				System.out.println("이미 참가 중 입니다.");
+				return;
 			}
+			SqlExecutor.update(
+			"insert into tb_participant (chal_no, user_id) values (?, ?, ?)",
+			no, login
+			);
+			SqlExecutor.update(
+			"update tb_challenge set part_cnt = part_cnt + 1"
+			);
+			Challenge c = selectOneChallenge(no);
+			if (c.getPartCnt() == c.getLimitPart()) {
+				setCondition(2);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
 
 		}
 	}
-	
+
 	// 일치하는 아이디를 찾아서 글번호 찾아낸다.
 	// 일치하는 글번호 return
-	public void MyChallengeSelect() {
-		for (int i = 0; i < pList.size(); i++) {
-			
+
+	// 사용자가 쓴 글만 조회
+	public List<Challenge> selectMyChallenge(String loginId, int condition) {
+		Connection con = null;
+		PreparedStatement prtmt = null;
+		try {
+			con = ConnectionPool.getConnection();
+
+			StringBuffer sql = new StringBuffer();
+			sql.append(
+					"select c.chal_no, c.user_id, c.title, c.content, c.reg_date, c.part_fee, c.limit_part, c.recruit_date, c.exam_date, c.condition, c.reward_date ");
+			sql.append("  from tb_challenge c");
+			sql.append("  inner join tb_participant p");
+			sql.append("     on c.chal_no = p.chal_no");
+			sql.append(" where p.user_id = ?,");
+			sql.append(" where c.condition = ?");
+			prtmt = con.prepareStatement(sql.toString());
+			int index = 1;
+			prtmt.setString(index++, loginId);
+			prtmt.setInt(index++, condition);
+			ResultSet rs = prtmt.executeQuery();
+			if (rs.next()) {
+				Challenge c = new Challenge();
+				c.setChalNo(rs.getInt("chal_no"));
+				c.setUserId(rs.getString("user_name"));
+				c.setTitle(rs.getString("title"));
+				c.setContent(rs.getString("content"));
+				c.setRegDate(rs.getString("reg_date"));
+				c.setPartFee(rs.getInt("part_fee"));
+				c.setLimitPart(rs.getInt("limit_part"));
+				c.setRecruitDate(rs.getString("recruit_date"));
+				c.setExamDate(rs.getString("exam_date"));
+				c.setCondition(rs.getInt("condition"));
+				c.setRewardDate(rs.getString("reward_date"));
+
+				cList.add(c);
+				return cList;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	// 참가자 정보 받기
+	public Participant getParticipant(int no) {
+		Connection con = null;
+		PreparedStatement prtmt = null;
+		try {
+			con = ConnectionPool.getConnection();
+
+			StringBuffer sql = new StringBuffer();
+			sql.append("select chal_no, user_id, join_date");
+			sql.append("  from tb_participant");
+			sql.append(" where no = ?");
+			prtmt = con.prepareStatement(sql.toString());
+			prtmt.setInt(1, no);
+			ResultSet rs = prtmt.executeQuery();
+			if (rs.next()) {
+				Participant p = new Participant();
+				p.setChalNo(rs.getInt("chal_no"));
+				p.setUserId(rs.getString("user_id"));
+				p.setJoinDate(rs.getDate("join_date"));
+
+				pList.add(p);
+				return p;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	//진행 상태 변경
+	public void setCondition(int no) {
+		try {
+			ConnectionPool.getConnection();
+			SqlExecutor.update(
+			"update tb_challenge set part_cnt = ?", no
+			);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+	}
+	//검색한 게시물 결과
+	/*
+	public List<Challenge> keywordSearch(){
+		Connection con = null;
+		PreparedStatement prtmt = null;
+		try {
+			con = ConnectionPool.getConnection();
+			StringBuffer sql = new StringBuffer();
+			sql.append("select chal_no, user_id, title, to_char(reg_date, 'yyyy-mm-dd') as reg_date,  limit_part, part_fee");
+			sql.append("  from tb_challenge");
+			// 여기부터 수정
+			sql.append(" where ");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
+	*/
 }
+

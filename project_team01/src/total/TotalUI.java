@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import board.dao.BoardDAO;
+import board.ui.BoardUI;
+import challenge.dao.ChallengeDAO;
+import challenge.ui.ChallengeUI;
 import member.dao.MemberDAO;
 import member.ui.BaseMemberUI;
 import member.ui.LoginMemberUI;
-import member.ui.MenuMemberUI;
 import member.ui.SignUpMemberUI;
-import member.vo.MemberVO;
 import pointShop.dao.PointShopDAO;
 import pointShop.ui.PointShopUI;
 import pointShop.vo.PointVO;
@@ -19,8 +21,13 @@ public class TotalUI {
 	MemberDAO dao = new MemberDAO();
 	List<PointVO> list = new ArrayList<>();
 	PointShopDAO pdao = new PointShopDAO(list);
-	PointShopUI pUi= new PointShopUI(pdao);
-	MenuMemberUI menu= new MenuMemberUI(dao);
+	PointShopUI pui= new PointShopUI(pdao);
+	TotalMenuUI menu= new TotalMenuUI(dao);
+	BoardDAO bdao = new BoardDAO();
+	BoardUI bui = new BoardUI(bdao);
+	ChallengeDAO cdao = new ChallengeDAO();
+	ChallengeUI challenge = new ChallengeUI(cdao);
+
     //첫번째 틀
 	public void service() {
 		while (true) {
@@ -37,7 +44,7 @@ public class TotalUI {
 			switch (menu.menu()) {
 			case 1: ui = new LoginMemberUI(dao); break;
 			case 2: ui = new SignUpMemberUI(dao); break;
-			case 3:
+			case 3: challenge.service(); break;
 			case 4:
 			case 0: exit();
 			default:
@@ -54,9 +61,9 @@ public class TotalUI {
 			if (dao.isLoginCheck() == false) return;
 			switch (menu.menu()) {
 			case 1: logout(); break;
-			case 2:
-			case 3:  pUi.service(); break;
-			case 4:
+			case 2: challenge.service(); break;
+			case 3: pui.service(); break;
+			case 4: bui.service(); break;
 			case 0: exit();
 			default:
 				System.out.println("번호를 잘못입력하셨습니다.");

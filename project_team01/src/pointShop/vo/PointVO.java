@@ -10,6 +10,15 @@ public class PointVO {
 	private String regDate;
 	private String deWi;
 	private String id;
+	private String accountNum;
+
+	public String getAccountNum() {
+		return accountNum;
+	}
+
+	public void setAccountNum(String accountNum) {
+		this.accountNum = accountNum;
+	}
 
 	public String getId() {
 		return id;
@@ -28,6 +37,15 @@ public class PointVO {
 		this.deWi = (dewi == 1 ? "충전" : "환급");
 	}
 	
+	public PointVO(String bank, String accountNum, int amount, String regDate, int dewi) {
+		this.amount = amount;
+		this.bank = bank;
+		this.regDate = regDate;
+		this.deWi = (dewi == 1 ? "충전" : "환급");
+		this.accountNum = accountNum;
+		this.payType = "계좌입금";
+	}
+
 	public PointVO(String bank, String name, int amount, String date, int payType, int dewi) {
 		this.bank = bank; 
 		this.name = name;
